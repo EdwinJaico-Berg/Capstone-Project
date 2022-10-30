@@ -2,10 +2,10 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, classification_report
 
 
-def basic_eda(df: pd.DataFrame, name: str, components: list = None) -> None:
+def BasicEda(df: pd.DataFrame, name: str, components: list = None) -> None:
     """
     Prints the basic summary of the DataFrame, including the shape, percentage
     of null and duplicate rows, and the numeric/categorical split.
@@ -31,8 +31,6 @@ def basic_eda(df: pd.DataFrame, name: str, components: list = None) -> None:
     columns = df.shape[1]
     null_rows = len(df[df.isna().all(axis=1)])
     percentage_null_rows = null_rows / rows
-    duplicate_rows = df.duplicated().sum()
-    percentage_duplicate_rows = duplicate_rows / rows
     types = df.dtypes
     num_cols = len(df.select_dtypes('number').columns)
     cat_cols = len(df.select_dtypes('object').columns)
@@ -45,6 +43,8 @@ def basic_eda(df: pd.DataFrame, name: str, components: list = None) -> None:
         print(f'Total null rows: {null_rows}')
         print(f'Percentage null rows: {percentage_null_rows: .3f}%', end='\n\n')
     if (not components) or ('duplicates' in components):
+        duplicate_rows = df.duplicated().sum()
+        percentage_duplicate_rows = duplicate_rows / rows
         print(f'Total duplicate rows: {duplicate_rows}')
         print(f'Percentage duplicate rows: {percentage_duplicate_rows: .3f}%', end='\n\n')
     if (not components) or ('columns' in components):
@@ -52,7 +52,6 @@ def basic_eda(df: pd.DataFrame, name: str, components: list = None) -> None:
     if (not components) or ('dtypes' in components):
         print(f'Number of categorical columns: {cat_cols}')
         print(f'Number of numeric columns: {num_cols}')
-
 
 
 def sample_rows(df: pd.DataFrame) -> pd.DataFrame:
@@ -89,12 +88,6 @@ def count_percentage_df(series: pd.Series) -> pd.DataFrame:
     return df
 
 
-def find_nearest_node(coordinates: tuple, station_values: np.array, ) -> float:
-    """
-    Takes in a latitude or longitude value and returns the 
-    """
-    raise NotImplementedError
-
 def mean(variable_list: list) -> float:
     """
     Takes a list and returns the mean of all available values
@@ -115,20 +108,3 @@ def mean(variable_list: list) -> float:
         return mean
     else:
         return np.nan
-
-def PlotConfusionMatrix(model, X_test, y_test) -> None:
-    # Make classifications based on the test features, and assign the classifications to a variable
-    y_pred = model.predict(X_test)
-
-    # Build the confusion matrix as a dataframe
-    confusion_df = pd.DataFrame(confusion_matrix(y_test, y_pred))
-    confusion_df.index = [f'Actually {i}' for i in range(1, 8)]
-    confusion_df.columns = [f'Predicted {i}' for i in range(1, 8)]
-
-    # Heatmap of the above
-    plt.figure(figsize=(12, 8), dpi=300)
-    sns.heatmap(confusion_df, annot=True, fmt='d', cmap='OrRd') # Passing in fmt='d' prevents the counts from being displayed in scientific notation
-    plt.xticks(rotation=45)
-    plt.title('Confusion Heatmap')
-    plt.savefig('figs/confusion_heatmap_1.jpg')
-    plt.show()

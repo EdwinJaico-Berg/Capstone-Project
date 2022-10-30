@@ -6,53 +6,46 @@ from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
-def BasicEda(df: pd.DataFrame, name: str, components: list = None) -> None:
-    """
-    Prints the basic summary of the DataFrame, including the shape, percentage
-    of null and duplicate rows, and the numeric/categorical split.
+def LoadDf() -> pd.DataFrame:
+    """TODO"""
+    df_1 = pd.read_pickle('sample_data/30k_cleaned.pkl')
+    df_2 = pd.read_pickle('sample_data/large_fires_cleaned.pkl')
 
-    Parameters
-    ----------
-    df: The DataFrame on which the EDA will be performed.
-    name: The name that we want to give to the given DataFrame.
-    components: {None, 'shape', 'null', 'duplicates', 'columns', 'dtypes'}, default None. 
-    List that determines which components of the EDA to print. Mulitple values can be put in the list. 
-    - ``shape``: Prints the rows and columns of the DataFrame.
-    - ``null``: Prints the null row count and percentage.
-    - ``duplicates``: Prints the duplicate row count and percentage.
-    - ``columns``: Prints the dtype of the columns in the DataFrame.
-    - ``dtypes``: Prints the categorical and numerical column count.
+    # Drop index column
+    df_2.drop('index', axis=1, inplace=True)
 
-    Returns
-    -------
-    None
-    """
-    title = name.upper()
-    rows = df.shape[0]
-    columns = df.shape[1]
-    null_rows = len(df[df.isna().all(axis=1)])
-    percentage_null_rows = null_rows / rows
-    types = df.dtypes
-    num_cols = len(df.select_dtypes('number').columns)
-    cat_cols = len(df.select_dtypes('object').columns)
+    # Concatenate the columns
+    df = pd.concat([df_1, df_2])
 
-    print(f'{title}', '-' * len(title), sep='\n', end='\n\n')
+    # Remove the columns that contain lists
+    list_cols = ['tempmax',
+    'temp',
+    'humidity',
+    'precip',
+    'dew',
+    'windspeed',
+    'winddir',
+    'pressure']
 
-    if (not components) or ('shape' in components):
-        print(f'Rows: {rows}    Columns: {columns}', end='\n\n')
-    if (not components) or ('null' in components):
-        print(f'Total null rows: {null_rows}')
-        print(f'Percentage null rows: {percentage_null_rows: .3f}%', end='\n\n')
-    if (not components) or ('duplicates' in components):
-        duplicate_rows = df.duplicated().sum()
-        percentage_duplicate_rows = duplicate_rows / rows
-        print(f'Total duplicate rows: {duplicate_rows}')
-        print(f'Percentage duplicate rows: {percentage_duplicate_rows: .3f}%', end='\n\n')
-    if (not components) or ('columns' in components):
-        print(types, end='\n\n')
-    if (not components) or ('dtypes' in components):
-        print(f'Number of categorical columns: {cat_cols}')
-        print(f'Number of numeric columns: {num_cols}')
+    return df.drop(list_cols, axis=1)
+
+def BasicPreprocessing(df: pd.DataFrame) -> pd.DataFrame:
+    """TODO"""
+    # Generate numeric and categorical DataFrames
+    numeric_df = df.select_dtypes('number').copy()
+    categorical_df = df.select_dtypes('object').copy()
+
+    # Get dummy variables for the state column
+    state_dummies = pd.get_dummies(categorical_df['STATE'], prefix='state')
+    
+    # Append the dummy variables and remove the state column
+    categorical_df = pd.concat([categorical_df, state_dummies], axis=1)
+    categorical_df.drop('STATE', axis=1, inplace=True)  
+
+    df = pd.concat([numeric_df, categorical_df], axis=1)
+
+    return df
+
 
 
 def PlotBoundaries(model, X, Y, figsize=(8, 6)):
@@ -119,7 +112,7 @@ def HistogramSubplots(df: pd.DataFrame, columns: int=3) -> None:
     rows = ceil(len(df.columns) / columns)
 
     # Create subplot grid
-    plt.subplots(rows, columns, dpi=300, figsize=(15,15))
+    plt.subplots(rows, columns, dpi=300, figsize=(15,5))
 
     for index, col in enumerate(df.columns):
         # Calculate the position
@@ -138,6 +131,7 @@ def HistogramSubplots(df: pd.DataFrame, columns: int=3) -> None:
     plt.show()
 
 def ScatterSubplots(df: pd.DataFrame, target: str, columns: int=3):
+    """TODO"""
     from math import ceil
 
     y = df[target]
@@ -279,7 +273,7 @@ def GeneateXy(df: pd.DataFrame, target: str, sample: float=None) -> tuple:
 
 def train_validate_test(X, y, test_size: float=0.2, validation_size:float=0.3) -> tuple:
     '''
-    Function that
+    TODO
     '''
     # Create remainder
     X_rem, X_test, y_rem, y_test = train_test_split(X,y,test_size=test_size, stratify=y)
@@ -399,6 +393,7 @@ def CalculateDelta(feature_list: list) -> float:
         return None
 
 def PlotCorrelationMatrix(df: pd.DataFrame) -> None:
+    """TODO"""
     corr = df.corr()
     plt.figure(figsize=(20,10), dpi=300)
     matrix = np.triu(corr)
