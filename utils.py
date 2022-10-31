@@ -1,3 +1,4 @@
+from tkinter.messagebox import NO
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -8,45 +9,27 @@ from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
 def LoadDf() -> pd.DataFrame:
     """TODO"""
-    df_1 = pd.read_pickle('sample_data/30k_cleaned.pkl')
+    df_1 = pd.read_pickle('sample_data/30k_engineered.pkl')
     df_2 = pd.read_pickle('sample_data/large_fires_cleaned.pkl')
 
-    # Drop index column
-    df_2.drop('index', axis=1, inplace=True)
+    # Drop date column
+    df_1.drop('DATE', axis=1, inplace=True)
 
     # Concatenate the columns
     df = pd.concat([df_1, df_2])
 
-    # Remove the columns that contain lists
-    list_cols = ['tempmax',
-    'temp',
-    'humidity',
-    'precip',
-    'dew',
-    'windspeed',
-    'winddir',
-    'pressure']
-
-    return df.drop(list_cols, axis=1)
+    return df
 
 def BasicPreprocessing(df: pd.DataFrame) -> pd.DataFrame:
     """TODO"""
-    # Generate numeric and categorical DataFrames
-    numeric_df = df.select_dtypes('number').copy()
-    categorical_df = df.select_dtypes('object').copy()
-
     # Get dummy variables for the state column
-    state_dummies = pd.get_dummies(categorical_df['STATE'], prefix='state')
+    state_dummies = pd.get_dummies(df['STATE'], prefix='state')
     
     # Append the dummy variables and remove the state column
-    categorical_df = pd.concat([categorical_df, state_dummies], axis=1)
-    categorical_df.drop('STATE', axis=1, inplace=True)  
-
-    df = pd.concat([numeric_df, categorical_df], axis=1)
+    df = pd.concat([df, state_dummies], axis=1)
+    df.drop('STATE', axis=1, inplace=True)  
 
     return df
-
-
 
 def PlotBoundaries(model, X, Y, figsize=(8, 6)):
     '''
@@ -93,7 +76,7 @@ def PlotEnsembleBoundaries(ensembles, X, Y, shape, figsize=(10, 7)):
 
     plt.show()
 
-def HistogramSubplots(df: pd.DataFrame, columns: int=3) -> None:
+def HistogramSubplots(df: pd.DataFrame, columns: int=3, figsize: tuple=(30,30)) -> None:
     '''
     Plots the histograms for the columns in the given DataFrame.
 
@@ -112,7 +95,7 @@ def HistogramSubplots(df: pd.DataFrame, columns: int=3) -> None:
     rows = ceil(len(df.columns) / columns)
 
     # Create subplot grid
-    plt.subplots(rows, columns, dpi=300, figsize=(15,5))
+    plt.subplots(rows, columns, dpi=300, figsize=figsize)
 
     for index, col in enumerate(df.columns):
         # Calculate the position
@@ -275,13 +258,7 @@ def train_validate_test(X, y, test_size: float=0.2, validation_size:float=0.3) -
     '''
     TODO
     '''
-    # Create remainder
-    X_rem, X_test, y_rem, y_test = train_test_split(X,y,test_size=test_size, stratify=y)
-
-    # Create train and validation
-    X_train, X_validation, y_train, y_validation = train_test_split(X_rem, y_rem, test_size=validation_size, stratify=y_rem)
-
-    return X_train, X_validation, X_test, y_train, y_validation, y_test
+    return NotImplementedError, 'Moved to model_utils'
 
 def false_positive_rate(y_true, y_pred) -> float:
     '''
@@ -380,17 +357,6 @@ def mean(variable_list: list) -> float:
     else:
         return np.nan
 
-def CalculateDelta(feature_list: list) -> float:
-    '''
-    Calculates the difference in temperature 
-    '''
-
-    delta = feature_list[-1] - feature_list[0]
-
-    if delta is not None:
-        return delta
-    else:
-        return None
 
 def PlotCorrelationMatrix(df: pd.DataFrame) -> None:
     """TODO"""
