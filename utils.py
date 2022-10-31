@@ -6,6 +6,7 @@ import seaborn as sns
 from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from scipy.stats import boxcox
 
 def LoadDf() -> pd.DataFrame:
     """TODO"""
@@ -18,9 +19,11 @@ def LoadDf() -> pd.DataFrame:
     # Concatenate the columns
     df = pd.concat([df_1, df_2])
 
+    df.reset_index(drop=True, inplace=True)
+
     return df
 
-def BasicPreprocessing(df: pd.DataFrame) -> pd.DataFrame:
+def BasicCategoricalPreprocessing(df: pd.DataFrame) -> pd.DataFrame:
     """TODO"""
     # Get dummy variables for the state column
     state_dummies = pd.get_dummies(df['STATE'], prefix='state')
@@ -31,50 +34,20 @@ def BasicPreprocessing(df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
-def PlotBoundaries(model, X, Y, figsize=(8, 6)):
-    '''
-    Helper function that plots the decision boundaries of a model and data (X,Y)
-    Code modified from: https://scikit-learn.org/stable/auto_examples/neighbors/plot_classification.html
-    '''
+def BasicNumericPreprocessing(df: pd.DataFrame) -> pd.DataFrame:
+    """TODO"""
+    df = df.copy()
 
-    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-    xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.01),
-                         np.arange(y_min, y_max, 0.01))
+    boxcox_cols = [col for col in df.columns
+                if 'variance' in col]
 
-    Z = model.predict(np.c_[xx.ravel(), yy.ravel()])
-    Z = Z.reshape(xx.shape)
+    boxcox_cols.remove('precip_variance')
 
-    plt.figure(figsize=figsize)
-    plt.contourf(xx, yy, Z, alpha=0.4)
+    for col in boxcox_cols:
+        df[col] = boxcox(df[col])[0]
 
-    # Plot
-    plt.scatter(X[:, 0], X[:, 1], c=Y, s=20, edgecolor='k')
-    plt.show()
+    return df, boxcox_cols
 
-def PlotEnsembleBoundaries(ensembles, X, Y, shape, figsize=(10, 7)):
-    '''
-    Helper function to plot the boundaries of ensemble methods.
-    Code modified from: https://scikit-learn.org/stable/auto_examples/ensemble/plot_forest_iris.html
-    '''
-    fig, axes = plt.subplots(shape[0], shape[1], figsize=figsize)
-    for i, (ax, model) in enumerate(zip(axes.ravel(), ensembles)):
-        x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-        y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-        xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.01),
-                             np.arange(y_min, y_max, 0.01))
-
-        Z = model.predict(np.c_[xx.ravel(), yy.ravel()])
-        Z = Z.reshape(xx.shape)
-
-        ax.contourf(xx, yy, Z, alpha=0.4)
-
-        # Plot
-        ax.scatter(X[:, 0], X[:, 1], c=Y, s=20, edgecolor='k')
-        ax.get_xaxis().set_visible(False)
-        ax.get_yaxis().set_visible(False)
-
-    plt.show()
 
 def HistogramSubplots(df: pd.DataFrame, columns: int=3, figsize: tuple=(30,30)) -> None:
     '''
@@ -108,7 +81,7 @@ def HistogramSubplots(df: pd.DataFrame, columns: int=3, figsize: tuple=(30,30)) 
         sns.histplot(x=df[col])
         plt.axvline(x=df[col].mean(), label=f'Mean: {df[col].mean():.2f}', color='red')
         plt.axvline(x=df[col].median(), label=f'Median: {df[col].median():.2f}', color='green')
-        plt.legend(fancybox=True, shadow=True)
+        plt.legend()
 
     plt.tight_layout()
     plt.show()
@@ -160,7 +133,7 @@ def PlotVarianceRatio(model: PCA, threshold: float=0.9) -> None:
     index = np.where(cumulative_sum > threshold)[0][0]
 
     # Plot line plot and threshold
-    plt.figure(dpi=300)
+    plt.figure(dpi=300, figsize=(15, 5))
     sns.lineplot(x=x, y=cumulative_sum)
     plt.axhline(threshold, c='r', linestyle='--')
     plt.xlabel('Number of PCs')
@@ -204,33 +177,6 @@ def CustomTransform(df: pd.DataFrame, target: str) -> tuple:
 
     return X_train, X_test, y_train, y_test
 
-def PlotTrainTest(x_vals: list, x_label: str, train_scores: list, test_scores: list, validation: bool=False) -> None:
-    '''
-    Function that plots the train and test/validation accuracies.
-
-    Parameters
-    ----------
-    x_vals: list of the x-axis values for the plot.
-    x_label: string for the x-axis label.
-    train_scores: list of the train scores.
-    test_scores: list of train or validation scores.
-    validation: bool for whether we are plotting the validation or test set. Default value is False.
-
-    Returns
-    -------
-    None
-    '''
-    # Create line label
-    line_label = 'Validation Score' if validation else 'Test Score'
-    
-    # Create plot
-    plt.figure(figsize=(15, 5), dpi=300)
-    plt.plot(x_vals, train_scores,label="Train Score",marker='.')
-    plt.plot(x_vals, test_scores,label=line_label,marker='.')
-    plt.xlabel(x_label)
-    plt.ylabel('Accuracy')
-    plt.legend()
-    plt.show();
 
 def GeneateXy(df: pd.DataFrame, target: str, sample: float=None) -> tuple:
     '''
