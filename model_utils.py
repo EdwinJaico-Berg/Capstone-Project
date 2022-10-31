@@ -40,7 +40,6 @@ def PlotConfusionMatrix(model, X_test, y_test) -> None:
     confusion_df = pd.DataFrame(confusion_matrix(y_test, y_pred))
     confusion_df.index = [f'Actually {i}' for i in predictions]
     confusion_df.columns = [f'Predicted {i}' for i in predictions]
-
     # Heatmap of the above
     plt.figure(figsize=(12, 8))
     sns.heatmap(confusion_df, annot=True, fmt='d', cmap='OrRd') # Passing in fmt='d' prevents the counts from being displayed in scientific notation
@@ -154,7 +153,7 @@ def PlotEnsembleBoundaries(ensembles, X, Y, shape, figsize=(10, 7)):
 
     plt.show()
 
-def PlotTrainTest(x_vals: list, x_label: str, train_scores: list, test_scores: list, validation: bool=False) -> None:
+def PlotTrainTest(x_vals: list, x_label: str, train_scores: list, test_scores: list, validation: bool=False, log: bool=False) -> None:
     '''
     Function that plots the train and test/validation accuracies.
 
@@ -178,6 +177,8 @@ def PlotTrainTest(x_vals: list, x_label: str, train_scores: list, test_scores: l
     plt.plot(x_vals, train_scores,label="Train Score",marker='.')
     plt.plot(x_vals, test_scores,label=line_label,marker='.')
     plt.xlabel(x_label)
+    if log:
+        plt.xscale('log')
     plt.ylabel('Accuracy')
     plt.legend()
     plt.show();
