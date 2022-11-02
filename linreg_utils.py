@@ -5,7 +5,6 @@ import seaborn as sns
 from sklearn.linear_model import Lasso, Ridge, LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from sklearn.model_selection import cross_val_score
-from model_utils import ridge_lasso_evaluation
 
 def ScoreModel(model, X_test, y_test) -> None:
     """TODO"""

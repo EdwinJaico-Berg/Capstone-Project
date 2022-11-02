@@ -177,29 +177,6 @@ def CustomTransform(df: pd.DataFrame, target: str) -> tuple:
 
     return X_train, X_test, y_train, y_test
 
-
-def GeneateXy(df: pd.DataFrame, target: str, sample: float=None) -> tuple:
-    '''
-    Create the X and y variables from a given data frame.
-
-    Parameters
-    ----------
-    df: DataFrame from which the X and y variables are extracted.
-    target: string of the column which we will be considering the target.
-    sample: float value that determines how large a sample we are taking. If not given, the entire DataFrame will be considered.
-
-    Returns
-    -------
-    Returns a tuple containing the X variables and the y target. These will be a pandas DataFrame or Series.
-    '''
-    if sample:
-        df = df.sample(frac=sample)
-
-    X = df.drop(target, axis=1)
-    y = df[target]
-
-    return X, y
-
 def train_validate_test(X, y, test_size: float=0.2, validation_size:float=0.3) -> tuple:
     '''
     TODO
@@ -310,4 +287,23 @@ def PlotCorrelationMatrix(df: pd.DataFrame) -> None:
     plt.figure(figsize=(20,10), dpi=300)
     matrix = np.triu(corr)
     sns.heatmap(corr, annot=True, mask=matrix, vmin=-1, vmax=1)
+    plt.show()
+
+def PlotFireSizeDistribution(df: pd.DataFrame) -> None:
+    plt.subplots(1, 2, figsize=(15, 5))
+
+    plt.subplot(1, 2, 1)
+    plt.title('Fire Size Distribution')
+    sns.boxplot(x=df['FIRE_SIZE'])
+    plt.axvline(x=df['FIRE_SIZE'].mean(), color='red', label=f'Mean: {df["FIRE_SIZE"].mean():.1f}')
+    plt.xlabel('Fire Size (Acres)')
+    plt.legend()
+
+    plt.subplot(1, 2, 2)
+    plt.title('Fire Size Distribution')
+    plt.axvline(x=df['FIRE_SIZE'].median(), color='red', label=f'Median: {df["FIRE_SIZE"].median():.1f}')
+    sns.boxplot(x=df['FIRE_SIZE'], showfliers=False)
+    plt.xlabel('Fire Size (Acres)')
+    plt.legend()
+
     plt.show()

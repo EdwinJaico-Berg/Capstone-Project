@@ -4,11 +4,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import Lasso, Ridge
-from sklearn.metrics import roc_curve, auc
-from sklearn.preprocessing import label_binarize
-from sklearn.multiclass import OneVsRestClassifier
-from sklearn.metrics import roc_auc_score
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
+from sklearn.compose import ColumnTransformer
 
 
 def GenerateXy(df):
@@ -48,31 +45,6 @@ def PlotConfusionMatrix(model, X_test, y_test) -> None:
     plt.show()
 
     print(classification_report(y_test, y_pred))
-
-# Create a function called lasso,
-def ridge_lasso_evaluation(Model, X: pd.DataFrame, y: pd.Series, alphas: list) -> pd.DataFrame:
-    '''
-    Takes in a list of alphas. Outputs a dataframe containing the coefficients of lasso regressions from each alpha.
-    '''
-    # Create an empty data frame
-    df = pd.DataFrame(index=X.columns)
-    
-    # For each alpha value in the list of alpha values,
-    for alpha in alphas:
-        # Create a lasso regression with that alpha value,
-        model = Model(alpha=alpha)
-        
-        # Fit the lasso regression
-        model.fit(X, y)
-        
-        # Create a column name for that alpha value
-        column_name = f'Alpha = {alpha}'
-
-        # Create a column of coefficient values
-        df[column_name] = model.coef_
-        
-    # Return the datafram    
-    return df
 
 def CreateTransformedColumns(X, y):
     """TODO"""
@@ -183,6 +155,43 @@ def PlotTrainTest(x_vals: list, x_label: str, train_scores: list, test_scores: l
     plt.legend()
     plt.show();
 
+def CreateColumnTransformer(X: pd.DataFrame) -> ColumnTransformer:
+    """TODO"""
+    # Create the scaling columns
+    robust_cols = ['precip_variance', 'ch4', 'n2o', 'co2']
+    minmax_cols = ['FIRE_YEAR', 'DISCOVERY_DOY', 'LATITUDE', 'LONGITUDE']
+    state_cols = [col for col in X.columns
+                if 'state' in col]
+    ss_cols = [col for col in X.columns
+            if col not in robust_cols
+            if col not in minmax_cols
+            if col not in state_cols]
+    
+    # Create column transformation list
+    col_transforms = [('standard scale', StandardScaler(), ss_cols),
+                    ('minmax scale', MinMaxScaler(), minmax_cols), 
+                    ('robust scale', RobustScaler(), robust_cols)]
 
-def PlotMultiClassROC():
-    raise NotImplementedError
+    # Create the column transformer
+    col_transformer = ColumnTransformer(col_transforms, remainder='passthrough')
+
+    return col_transformer
+
+def PlotCoefficients(model, X) -> None:
+    # The coefficient, notice it returns an array with one spot for each feature
+    coefficients = model.coef_
+
+    coefficients_df = pd.DataFrame(data={'coef':coefficients}, index=X.columns).sort_values(by='coef', ascending=False)
+
+    plt.subplots(1, 2, figsize=(15, 5))
+    plt.subplot(1, 2, 1)
+    plt.title('Top 5 Positive Linear Regression Coefficients')
+    sns.barplot(x='coef', y=coefficients_df.head().index, data=coefficients_df.head())
+    plt.xlabel('Coefficient Value')
+    plt.ylabel('Feature Name')
+
+    plt.subplot(1, 2, 2)
+    plt.title('Top 5 Negative Linear Regression Coefficients')
+    sns.barplot(x='coef', y=coefficients_df.tail().index, data=coefficients_df.tail())
+    plt.xlabel('Coefficient Value')
+    plt.show()
