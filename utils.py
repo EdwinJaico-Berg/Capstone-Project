@@ -7,8 +7,67 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from scipy.stats import boxcox
 
+def BasicEda(df: pd.DataFrame, name: str, components: list = None) -> None:
+    """
+    Prints the basic summary of the DataFrame, including the shape, percentage
+    of null and duplicate rows, and the numeric/categorical split.
+
+    Parameters
+    ----------
+    df: The DataFrame on which the EDA will be performed.
+    name: The name that we want to give to the given DataFrame.
+    components: {None, 'shape', 'null', 'duplicates', 'columns', 'dtypes'}, default None. 
+    List that determines which components of the EDA to print. Mulitple values can be put in the list. 
+    - ``shape``: Prints the rows and columns of the DataFrame.
+    - ``null``: Prints the null row count and percentage.
+    - ``duplicates``: Prints the duplicate row count and percentage.
+    - ``columns``: Prints the dtype of the columns in the DataFrame.
+    - ``dtypes``: Prints the categorical and numerical column count.
+
+    Returns
+    -------
+    None
+    """
+    title = name.upper()
+    rows = df.shape[0]
+    columns = df.shape[1]
+    null_rows = len(df[df.isna().all(axis=1)])
+    percentage_null_rows = null_rows / rows
+    types = df.dtypes
+    num_cols = len(df.select_dtypes('number').columns)
+    cat_cols = len(df.select_dtypes('object').columns)
+
+    print(f'{title}', '-' * len(title), sep='\n', end='\n\n')
+
+    if (not components) or ('shape' in components):
+        print(f'Rows: {rows}    Columns: {columns}', end='\n\n')
+    if (not components) or ('null' in components):
+        print(f'Total null rows: {null_rows}')
+        print(f'Percentage null rows: {percentage_null_rows: .3f}%', end='\n\n')
+    if (not components) or ('duplicates' in components):
+        duplicate_rows = df.duplicated().sum()
+        percentage_duplicate_rows = duplicate_rows / rows
+        print(f'Total duplicate rows: {duplicate_rows}')
+        print(f'Percentage duplicate rows: {percentage_duplicate_rows: .3f}%', end='\n\n')
+    if (not components) or ('columns' in components):
+        print(types, end='\n\n')
+    if (not components) or ('dtypes' in components):
+        print(f'Number of categorical columns: {cat_cols}')
+        print(f'Number of numeric columns: {num_cols}')
+
 def LoadDf() -> pd.DataFrame:
-    """TODO"""
+    """
+    Function that loads the DataFrame from the samples created.
+
+    Parameters
+    ----------
+    None.
+
+    Returns
+    -------
+    pd.DataFrame that contains the approximately 30,000 wildfire observations with weather and
+    emissions data.
+    """
     df_1 = pd.read_pickle('sample_data/30k_engineered.pkl')
     df_2 = pd.read_pickle('sample_data/large_fires_cleaned.pkl')
 
@@ -23,7 +82,18 @@ def LoadDf() -> pd.DataFrame:
     return df
 
 def BasicCategoricalPreprocessing(df: pd.DataFrame) -> pd.DataFrame:
-    """TODO"""
+    """
+    Takes a DataFrame and does the basic preprocessing for the categorical columns, which 
+    includes the binarisation of the `STATE` column in the DataFrame.
+
+    Parameters
+    ----------
+    df: pd.DataFrame containing the wildfire data. 
+
+    Returns
+    -------
+    pd.DataFrame with the original columns and the binarised `STATE` column.
+    """
     # Get dummy variables for the state column
     state_dummies = pd.get_dummies(df['STATE'], prefix='state')
     
@@ -33,8 +103,19 @@ def BasicCategoricalPreprocessing(df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
-def BasicNumericPreprocessing(df: pd.DataFrame) -> pd.DataFrame:
-    """TODO"""
+def BasicNumericPreprocessing(df: pd.DataFrame) -> tuple:
+    """
+    Function that takes a DataFrame and conducts basic preprocessing for numerical columns. 
+    This consists of transforming variance columns using a BoxCox transformation.
+
+    Parameters
+    ----------
+    df: pd.DataFrame containing numerical columns.
+
+    Returns
+    -------
+    A tuple consisting of the formatted DataFrame, and the list of columns that were transformed.
+    """
     df = df.copy()
 
     boxcox_cols = [col for col in df.columns
@@ -59,7 +140,7 @@ def HistogramSubplots(df: pd.DataFrame, columns: int=3, figsize: tuple=(30,30)) 
 
     Returns
     -------
-    None
+    None.
     '''
     from math import ceil
     
@@ -85,8 +166,21 @@ def HistogramSubplots(df: pd.DataFrame, columns: int=3, figsize: tuple=(30,30)) 
     plt.tight_layout()
     plt.show()
 
-def ScatterSubplots(df: pd.DataFrame, target: str, columns: int=3):
-    """TODO"""
+def ScatterSubplots(df: pd.DataFrame, target: str, columns: int=3) -> None:
+    """
+    Function that plots the scatter plots of a target against the other features in a given 
+    DataFrame within a subplot. 
+
+    Parameters
+    ----------
+    df: The pd.DataFrame from which the features and target are taken,
+    target: The target variable which the scatter plots will be plotted against.
+    columns: default 3. Number of columns that the subplot will have.
+
+    Returns
+    -------
+    None
+    """
     from math import ceil
 
     y = df[target]
@@ -119,7 +213,7 @@ def PlotVarianceRatio(model: PCA, threshold: float=0.9) -> None:
     Parameters
     ----------
     model: a PCA model from which the variances will be extracted.
-    threshold: a float that tells us how much of the variance we want to capture with our components.
+    threshold: default 0.9. A float that tells us how much of the variance we want to capture with our components.
 
     Returns
     -------
@@ -145,46 +239,18 @@ def PlotVarianceRatio(model: PCA, threshold: float=0.9) -> None:
     plt.ylim([0, 1.1])
     plt.show()
 
-
-def CustomTransform(df: pd.DataFrame, target: str) -> tuple:
+def FPR(y_true: np.array, y_pred: np.array) -> float:
     '''
-    Function that returns a MinMax scaled and PCA transformed train, test, split
+    Function that calculates the false positive rate from the actual and prediction class of the given data.
 
     Parameters
     ----------
-    df: DataFrame from which the target and predictor variables are extracted.
-    target: string of the target.
-
+    y_true: np.array or pd.Series that contains the actual classes for the corresponding observations.
+    y_pred: np.array or pd.Series of the predicted values generated by a classification model.
+    
     Returns
     -------
-    Tuple with X_train, X_test, y_train, y_test .
-    '''
-    X = df.drop(target, axis=1)
-    y = df[target]
-
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y)
-
-    # Scale data
-    mm_scaler = MinMaxScaler()
-    X_train = mm_scaler.fit_transform(X_train)
-    X_test = mm_scaler.transform(X_test)
-
-    # Reduce dimensionality
-    pca = PCA(n_components=0.9)
-    X_train = pca.fit_transform(X_train)
-    X_test = pca.transform(X_test)
-
-    return X_train, X_test, y_train, y_test
-
-def train_validate_test(X, y, test_size: float=0.2, validation_size:float=0.3) -> tuple:
-    '''
-    TODO
-    '''
-    return NotImplementedError, 'Moved to model_utils'
-
-def false_positive_rate(y_true, y_pred) -> float:
-    '''
-    Function that calculates the false positive rate from the actual and prediction class of the given data
+    The false positive rate as a float.
     '''
     
     false_positives = (y_true == 0) & (y_pred == 1) 
@@ -196,9 +262,9 @@ def false_positive_rate(y_true, y_pred) -> float:
     true_negative_number = true_negatives.sum()
 
     # Find the ratio of (FP) to (TN + FP)
-    FPR = false_positive_number/(true_negative_number + false_positive_number)
+    fpr = false_positive_number/(true_negative_number + false_positive_number)
     
-    return FPR
+    return fpr
 
 def evaluate(string_list: str) -> list:
     ''''
@@ -227,7 +293,15 @@ def evaluate(string_list: str) -> list:
 
 def sample_rows(df: pd.DataFrame) -> pd.DataFrame:
     '''
-    Combines the head and tail of a DataFrame and returns the combination
+    Combines the two rows from the head and tail of a DataFrame along with two random rows and returns the combination.
+
+    Parameters
+    ----------
+    df: pd.DataFrame which we want to generate the samples from.
+
+    Returns
+    -------
+    pd.DataFrame containing the sample rows generated.
     '''
     head = df.head(2)
     samples = df.sample(2)
@@ -238,8 +312,16 @@ def sample_rows(df: pd.DataFrame) -> pd.DataFrame:
 
 def count_percentage_df(series: pd.Series) -> pd.DataFrame:
     """
-    This function takes in a series and returns a DataFrame that shows the percentage
+    This function takes in a pd.Series of categorical variables and returns a DataFrame that shows the percentage
     and count of the values.
+
+    Parameters
+    ----------
+    series: a pd.Series listing categorical variables.
+
+    Returns
+    -------
+    pd.DataFrame of the count and percentage representation of the variables in the list.
     """
     cp_dict = {
         'Count': [],
@@ -260,7 +342,15 @@ def count_percentage_df(series: pd.Series) -> pd.DataFrame:
 
 def mean(variable_list: list) -> float:
     """
-    Takes a list and returns the mean of all available values
+    Takes a list and returns the mean of all available values.
+
+    Parameters
+    ----------
+    variable_list: a list of floats and null values.
+
+    Returns
+    -------
+    The mean as a float. If the list is made of only null values, then np.nan is returned.
     """
     count = 0
     sum = 0
@@ -281,7 +371,17 @@ def mean(variable_list: list) -> float:
 
 
 def PlotCorrelationMatrix(df: pd.DataFrame) -> None:
-    """TODO"""
+    """
+    Function that takes a pd.DataFrame and plots the correlation matrix.
+
+    Parameters
+    ----------
+    df: pd.DataFrame from which the numeric variables will be taken.
+
+    Returns
+    -------
+    None.
+    """
     corr = df.corr()
     plt.figure(figsize=(20,10), dpi=300)
     matrix = np.triu(corr)
@@ -289,6 +389,19 @@ def PlotCorrelationMatrix(df: pd.DataFrame) -> None:
     plt.show()
 
 def PlotFireSizeDistribution(df: pd.DataFrame) -> None:
+    """
+    Function that plots a boxplot of the wildfire sizes in a given DataFrame. Two plots will be created
+    and presented within a subplot. The first will show the boxplot including the outliers along with a 
+    line showing the mean, while the second will omit outliers and plot a line for the median.
+
+    Parameters
+    ----------
+    df: pd.DataFrame from which the fire sizes will be taken.
+
+    Returns
+    -------
+    None
+    """
     plt.subplots(1, 2, figsize=(15, 5))
 
     plt.subplot(1, 2, 1)

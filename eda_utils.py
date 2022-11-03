@@ -1,8 +1,4 @@
-import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.metrics import confusion_matrix, classification_report
 
 
 def BasicEda(df: pd.DataFrame, name: str, components: list = None) -> None:
@@ -52,59 +48,3 @@ def BasicEda(df: pd.DataFrame, name: str, components: list = None) -> None:
     if (not components) or ('dtypes' in components):
         print(f'Number of categorical columns: {cat_cols}')
         print(f'Number of numeric columns: {num_cols}')
-
-
-def sample_rows(df: pd.DataFrame) -> pd.DataFrame:
-    '''
-    Combines the head and tail of a DataFrame and returns the combination
-    '''
-    head = df.head(2)
-    samples = df.sample(2)
-    tail = df.tail(2)
-    head_tail = pd.concat([head, samples, tail])
-    return(head_tail)
-    
-
-def count_percentage_df(series: pd.Series) -> pd.DataFrame:
-    """
-    This function takes in a series and returns a DataFrame that shows the percentage
-    and count of the values.
-    """
-    cp_dict = {
-        'Count': [],
-        'Percentage of Total': []
-    }
-
-    count_values = series.value_counts()
-    percentage_values = series.value_counts(normalize = True)
-    index = series.value_counts().index.values
-
-    for count, percent in zip(count_values, percentage_values):
-        cp_dict['Count'].append(count)
-        cp_dict['Percentage of Total'].append(percent)
-    
-    df = pd.DataFrame(cp_dict, index=index)
-
-    return df
-
-
-def mean(variable_list: list) -> float:
-    """
-    Takes a list and returns the mean of all available values
-    """
-    count = 0
-    sum = 0
-
-    for value in variable_list:
-        if np.isnan(value):
-            continue
-        else:
-            count += 1
-            sum += value
-        
-    
-    if count > 0:
-        mean = sum / count
-        return mean
-    else:
-        return np.nan
