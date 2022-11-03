@@ -1,0 +1,12 @@
+## Byte-compiled / optimized / DLL files 
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
+
+# Private files
+api.py
+
+# Unnecessary files
+Presentation/
+EDGAR\ Emissions/
+wildfire_data/
