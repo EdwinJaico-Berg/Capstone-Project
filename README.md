@@ -20,16 +20,16 @@ It is with this aspect in mind that the following project has been undertaken. U
 As can be seen, the project is split into a number of notebooks 
 
 #### Preface
-0. Loading of Emissions Data.ipynb (*)
+0. Loading of Emissions Data.ipynb * <br>
 
 #### Data Analysis
-1. Wildfire Data Analysis.ipynb <br>
-1.1.Gather Weather Data.ipynb (*) <br>
-1.2. Gathering Emissions Data.ipynb (*) <br>
+1.0. Wildfire Data Analysis.ipynb <br>
+1.1.Gather Weather Data.ipynb * <br>
+1.2. Gathering Emissions Data.ipynb * <br>
 
 #### EDA and Initial Models
-2. Data Preparation, EDA, and Initial Models.ipynb <br>
-2.1. Creating Further Samples.ipynb (*) <br>
+2.0. Data Preparation, EDA, and Initial Models.ipynb <br>
+2.1. Creating Further Samples.ipynb * <br>
 
 #### The Modelling Process
 3.1. Regression Models.ipynb<br>
