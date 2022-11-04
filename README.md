@@ -1,8 +1,8 @@
 <img src='https://ichef.bbci.co.uk/news/976/cpsprodpb/B420/production/_125621164_fire-reuters.jpg'>
 
-Edwin Jaico-Berg
-e.j.berg@outlook.com
-https://github.com/EdwinJaico-Berg
+Edwin Jaico-Berg <br>
+e.j.berg@outlook.com <br>
+https://github.com/EdwinJaico-Berg <br>
 
 # Wildfire Prediction Models
 A machine learning model that predicts the size of a wildfire given environmental features.
