@@ -4,7 +4,7 @@ Edwin Jaico-Berg <br>
 e.j.berg@outlook.com <br>
 https://github.com/EdwinJaico-Berg <br>
 
-# Wildfire Prediction Models
+# Wildfire Prediction Model
 A machine learning model that predicts the size of a wildfire given environmental features.
 
 ## Motivation
@@ -32,10 +32,10 @@ As can be seen, the project is split into a number of notebooks
 2.1. Creating Further Samples.ipynb (*)
 
 #### The Modelling Process
-3.1. Regression Models.ipynb
-3.2. Logistic Regression.ipynb
-3.3. Decision Tree.ipynb
-3.4 Ensemble Methods.ipynb
+3.1. Regression Models.ipynb<br>
+3.2. Logistic Regression.ipynb<br>
+3.3. Decision Tree.ipynb<br>
+3.4 Ensemble Methods.ipynb<br>
 
 #### Changing the Classification Problem
 4. Changing the Classification Problem.ipynb
