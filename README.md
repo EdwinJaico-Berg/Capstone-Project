@@ -1,4 +1,4 @@
-<img src='https://ichef.bbci.co.uk/news/976/cpsprodpb/B420/production/_125621164_fire-reuters.jpg'>
+<img src='https://cdn-icons-png.flaticon.com/512/3043/3043608.png'>
 
 Edwin Jaico-Berg <br>
 e.j.berg@outlook.com <br>
@@ -19,25 +19,36 @@ It is with this aspect in mind that the following project has been undertaken. U
 
 As can be seen, the project is split into a number of notebooks 
 
-#### Preface
-0. Loading of Emissions Data.ipynb * <br>
+### <u>Preface</u>
+**Loading of Emissions Data.ipynb** * <br>
+*Initial loading of emissions data into easily accessible and readable files*
 
-#### Data Analysis
-1.0. Wildfire Data Analysis.ipynb <br>
-1.1.Gather Weather Data.ipynb * <br>
-1.2. Gathering Emissions Data.ipynb * <br>
+### <u>Data Analysis</u>
+**Wildfire Data Analysis.ipynb** <br>
+*Preliminary analysis of the wildfire data set* <br>
+**Gather Weather Data.ipynb** * <br>
+*Notebook detailing the API call made to collect the weather data* <br>
+**Gathering Emissions Data.ipynb** * <br>
+*Calculating the emissions data from the files created previously* <br>
 
-#### EDA and Initial Models
-2.0. Data Preparation, EDA, and Initial Models.ipynb <br>
-2.1. Creating Further Samples.ipynb * <br>
+### <u>EDA and Initial Models</u>
+**Data Preparation, EDA, and Initial Models.ipynb** <br>
+*Notebook describing EDA and initial model building process* <br>
+**Creating Further Samples.ipynb** * <br>
+*Getting more samples and generating relevant weather and emissions data*<br>
 
-#### The Modelling Process
-3.1. Regression Models.ipynb<br>
-3.2. Logistic Regression.ipynb<br>
-3.3. Decision Tree.ipynb<br>
-3.4 Ensemble Methods.ipynb<br>
+### <u>The Modelling Process</u>
+**Regression Models.ipynb**<br>
+*Building regression models including linear and decision tree regressors*<br>
+**Logistic Regression.ipynb**<br>
+*Building a logistic regression model*<br>
+**Decision Tree.ipynb**<br>
+*Building a decision tree model*<br>
+**Ensemble Methods.ipynb**<br>
+*Building models using AdaBoost, Gradient Boosting, and XGBoost*<br>
 
-#### Changing the Classification Problem
-4. Changing the Classification Problem.ipynb
+### <u>Changing the Classification Problem</u>
+**Changing the Classification Problem.ipynb**<br>
+*Creating alternate classifications for wildfires to simplify our model*
 
-**Note:** (*) denotes that those notebooks should not be run.
+**Note:** * denotes that a notebook should not be run.
