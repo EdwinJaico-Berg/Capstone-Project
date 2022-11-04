@@ -9,10 +9,7 @@
     <strong>A machine learning model that predicts the size of a wildfire given environmental features.</strong>
   </p>
   <p align="center">
-    Edwin Jaico-Berg 
-  </p>
-  <p align="center">
-    e.j.berg@outlook.com 
+    Edwin Jaico-Berg | e.j.berg@outlook.com 
   </p>
   <p align="center">
       https://github.com/EdwinJaico-Berg 
