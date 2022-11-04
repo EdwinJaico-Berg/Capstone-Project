@@ -1,11 +1,23 @@
-<center><img src='https://cdn-icons-png.flaticon.com/512/3043/3043608.png' width=400></center>
+<div align="center">
+  <a href="https://github.com/EdwinJaico-Berg/final_project">
+    <img src="https://cdn-icons-png.flaticon.com/512/3043/3043608.png" alt="Logo" width="200">
+  </a>
 
-Edwin Jaico-Berg <br>
-e.j.berg@outlook.com <br>
-https://github.com/EdwinJaico-Berg <br>
+  <h3 align="center">Wildfire Predction Model</h3>
 
-# Wildfire Prediction Model
-A machine learning model that predicts the size of a wildfire given environmental features.
+  <p align="center">
+    <strong>A machine learning model that predicts the size of a wildfire given environmental features.</strong>
+  </p>
+  <p align="center">
+    Edwin Jaico-Berg 
+  </p>
+  <p align="center">
+    e.j.berg@outlook.com 
+  </p>
+  <p align="center">
+      https://github.com/EdwinJaico-Berg 
+  </p>
+</div>
 
 ## Motivation
 
