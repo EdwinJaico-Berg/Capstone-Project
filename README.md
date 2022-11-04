@@ -23,13 +23,13 @@ As can be seen, the project is split into a number of notebooks
 0. Loading of Emissions Data.ipynb (*)
 
 #### Data Analysis
-1. Wildfire Data Analysis.ipynb
-1.1.Gather Weather Data.ipynb (*)
-1.2. Gathering Emissions Data.ipynb (*)
+1. Wildfire Data Analysis.ipynb <br>
+1.1.Gather Weather Data.ipynb (*) <br>
+1.2. Gathering Emissions Data.ipynb (*) <br>
 
 #### EDA and Initial Models
-2. Data Preparation, EDA, and Initial Models.ipynb
-2.1. Creating Further Samples.ipynb (*)
+2. Data Preparation, EDA, and Initial Models.ipynb <br>
+2.1. Creating Further Samples.ipynb (*) <br>
 
 #### The Modelling Process
 3.1. Regression Models.ipynb<br>
