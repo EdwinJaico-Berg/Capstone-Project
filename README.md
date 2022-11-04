@@ -1,4 +1,4 @@
-<img src='https://cdn-icons-png.flaticon.com/512/3043/3043608.png'>
+<center><img src='https://cdn-icons-png.flaticon.com/512/3043/3043608.png' width=400></center>
 
 Edwin Jaico-Berg <br>
 e.j.berg@outlook.com <br>
