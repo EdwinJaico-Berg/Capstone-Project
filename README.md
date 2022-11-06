@@ -20,7 +20,7 @@
 
 2022 has presented a number of global challenges in terms of climate. This year alone stronger storms have left countries without power, while soaring summer temperatures have reduced the water level of major European rivers to the point that these major trading arteries were almost unnavigable. 
 
-The number of wildfires has also increased staggeringly across the world given that higher temperatures and longer dry periods have created the ideal environment for the spread of catastrophically damaging fires. The Annual 2021 Wildfires Report shows that in the US alone, 7 million acres of wildland were consumed by fire that year. Consequently, annual wildfire supression costs have risen, far exceeding the federal spending on fire prevention and hazard mitigation. 
+The number of wildfires has also increased staggeringly across the world given that higher temperatures and longer dry periods have created the ideal environment for the spread of catastrophically damaging fires. The Annual 2021 Wildfires Report shows that in the US alone, 7 million acres of wildland were consumed by fire that year. Consequently, annual wildfire suppression costs have risen, far exceeding the federal spending on fire prevention and hazard mitigation. 
 
 It is with this aspect in mind that the following project has been undertaken. Using the following <a href='https://www.kaggle.com/datasets/rtatman/188-million-us-wildfires'>wildfire data</a>, we will attempt to build a model that is able to  predict the size of wildfires based on weather and emissions (specifically greenhouse gases) data. 
 
