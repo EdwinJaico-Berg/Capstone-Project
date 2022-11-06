@@ -23,10 +23,14 @@ def ScoreModel(model, X_test, y_test) -> None:
     """
     y_pred = model.predict(X_test)
 
+    rsquared = model.score(X_test, y_test)
+    rmse = mean_squared_error(y_test, y_pred)
+    mae = mean_absolute_error(y_test, y_pred)
+
     print('Model Evaluation')
-    print(f'R-squared: {model.score(X_test, y_test)}')
-    print(f'RMSE:      {mean_squared_error(y_test, y_pred)}')
-    print(f'MAE:       {mean_absolute_error(y_test, y_pred)}')
+    print(f'R-squared: {rsquared:.4f}')
+    print(f'RMSE:      {rmse:.4f}')
+    print(f'MAE:       {mae:.4f}')
 
 def PlotAlphaRegression(X_train: pd.DataFrame, y_train: pd.Series, model, alphas: list) -> None:
     """
@@ -46,7 +50,7 @@ def PlotAlphaRegression(X_train: pd.DataFrame, y_train: pd.Series, model, alphas
     cross_val_scores = []
 
     for alpha in alphas:
-        print(f'Model {alpha}/{max(alphas)}', end='\r')
+        print(f'Model {alpha}/{max(alphas)}', end=' \r')
         model_ = model(alpha=alpha)
         cv_score = np.mean(cross_val_score(model_, X_train, y_train, cv = 5))
         cross_val_scores.append(cv_score)
@@ -80,7 +84,7 @@ def ridge_lasso_evaluation(Model, X: pd.DataFrame, y: pd.Series, alphas: list) -
     
     # For each alpha value in the list of alpha values,
     for alpha in alphas:
-        print(f'Fitting model {alpha}/{max(alphas)}', end='\r')
+        print(f'Fitting model {alpha}/{max(alphas)}', end=' \r')
 
         # Create a lasso regression with that alpha value,
         model = Model(alpha=alpha)

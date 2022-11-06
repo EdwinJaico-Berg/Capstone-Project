@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://github.com/EdwinJaico-Berg/final_project">
-    <img src="https://cdn-icons-png.flaticon.com/512/3043/3043608.png" alt="Logo" width="200">
+    <img src="https://cdn-icons-png.flaticon.com/512/5277/5277239.png" alt="Logo" width="200">
   </a>
 
   <h3 align="center">Wildfire Predction Model</h3>
@@ -26,7 +26,7 @@ It is with this aspect in mind that the following project has been undertaken. U
 
 # Project Structure
 
-As can be seen, the project is split into a number of notebooks 
+As can be seen, the project is split into a number of notebooks:
 
 ### <u>Preface</u>
 **Loading of Emissions Data.ipynb** * <br>

@@ -74,20 +74,20 @@ def PlotConfusionMatrix(model, X_test, y_test) -> None:
     # Make classifications based on the test features, and assign the classifications to a variable
     y_pred = model.predict(X_test)
 
-    # Get the prediction classes
     predictions = y_test.unique()
     predictions.sort()
 
     # Build the confusion matrix as a dataframe
     confusion_df = pd.DataFrame(confusion_matrix(y_test, y_pred))
-    confusion_df.index = [f'Actually {i}' for i in predictions]
-    confusion_df.columns = [f'Predicted {i}' for i in predictions]
-    
+    confusion_df.index = [i for i in predictions]
+    confusion_df.columns = [i for i in predictions]
+
     # Heatmap of the above
-    plt.figure(figsize=(12, 8))
+    plt.figure(figsize=(12, 8), dpi=300)
+    sns.heatmap(confusion_df, annot=True, fmt='d', cmap='OrRd') # Passing in fmt='d' prevents the counts from being displayed in scientific notation
     plt.title('Confusion Heatmap')
-    sns.heatmap(confusion_df, annot=True, fmt='d', cmap='OrRd')
-    plt.xticks(rotation=45)
+    plt.xlabel('Predicted Class')
+    plt.ylabel('Actual Class')
     plt.show()
 
     print(classification_report(y_test, y_pred))
@@ -254,14 +254,7 @@ def PlotCoefficients(model, X) -> None:
     None 
     """
     # Place coefficients in sorted DataFrame
-    try:
-        # Get the coefficients
-        coefficients = model.coef_
-        coefficients_df = pd.DataFrame(data={'coef':coefficients}, index=X.columns).sort_values(by='coef', ascending=False)
-    except ValueError:
-        # Get the coefficients
-        coefficients = model.coef_[0]
-        coefficients_df = pd.DataFrame(data={'coef':coefficients}, index=X.columns).sort_values(by='coef', ascending=False)
+    coefficients_df = sorted_coefficients_df(model, X)
 
     # Initialise subplot
     plt.subplots(1, 2, figsize=(15, 5))
@@ -279,3 +272,15 @@ def PlotCoefficients(model, X) -> None:
     sns.barplot(x='coef', y=coefficients_df.tail().index, data=coefficients_df.tail())
     plt.xlabel('Coefficient Value')
     plt.show()
+
+def sorted_coefficients_df(model, X):
+    try:
+        # Get the coefficients
+        coefficients = model.coef_
+        coefficients_df = pd.DataFrame(data={'coef':coefficients}, index=X.columns).sort_values(by='coef', ascending=False)
+    except ValueError:
+        # Get the coefficients
+        coefficients = model.coef_[0]
+        coefficients_df = pd.DataFrame(data={'coef':coefficients}, index=X.columns).sort_values(by='coef', ascending=False)
+
+    return coefficients_df

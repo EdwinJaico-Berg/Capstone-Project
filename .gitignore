@@ -8,5 +8,6 @@ api.py
 
 # Unnecessary files
 Presentation/
+assets/
 EDGAR\ Emissions/
 wildfire_data/
