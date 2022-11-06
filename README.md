@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://github.com/EdwinJaico-Berg/final_project">
+  <a href="https://github.com/EdwinJaico-Berg/Capstone-Project">
     <img src="https://cdn-icons-png.flaticon.com/512/5277/5277239.png" alt="Logo" width="200">
   </a>
 

@@ -261,14 +261,14 @@ def PlotCoefficients(model, X) -> None:
     
     # Create positive coefficient subplot
     plt.subplot(1, 2, 1)
-    plt.title('Top 5 Positive Linear Regression Coefficients')
+    plt.title('Top 5 Positive Coefficients')
     sns.barplot(x='coef', y=coefficients_df.head().index, data=coefficients_df.head())
     plt.xlabel('Coefficient Value')
     plt.ylabel('Feature Name')
 
     # Create negative coefficient subplot
     plt.subplot(1, 2, 2)
-    plt.title('Top 5 Negative Linear Regression Coefficients')
+    plt.title('Top 5 Negative Coefficients')
     sns.barplot(x='coef', y=coefficients_df.tail().index, data=coefficients_df.tail())
     plt.xlabel('Coefficient Value')
     plt.show()
