@@ -150,10 +150,7 @@ def HistogramSubplots(df: pd.DataFrame, columns: int=3, figsize: tuple=(30,30)) 
     # Create subplot grid
     plt.subplots(rows, columns, dpi=300, figsize=figsize)
 
-    for index, col in enumerate(df.columns):
-        # Calculate the position
-        position = index + 1
-
+    for position, col in enumerate(df.columns, start=1):
         # Get subplot
         plt.subplot(rows, columns, position)
 
@@ -192,10 +189,7 @@ def ScatterSubplots(df: pd.DataFrame, target: str, columns: int=3) -> None:
     # Create subplot grid
     plt.subplots(rows, columns, dpi=300, figsize=(30,30))
 
-    for index, col in enumerate(df.columns):
-        # Calculate the position
-        position = index + 1
-
+    for position, col in enumerate(df.columns, start=1):
         # Get subplot
         plt.subplot(rows, columns, position)
 
@@ -370,7 +364,7 @@ def mean(variable_list: list) -> float:
         return np.nan
 
 
-def PlotCorrelationMatrix(df: pd.DataFrame) -> None:
+def PlotCorrelationMatrix(df: pd.DataFrame, annot: bool=True) -> None:
     """
     Function that takes a pd.DataFrame and plots the correlation matrix.
 
@@ -385,7 +379,7 @@ def PlotCorrelationMatrix(df: pd.DataFrame) -> None:
     corr = df.corr()
     plt.figure(figsize=(20,10), dpi=300)
     matrix = np.triu(corr)
-    sns.heatmap(corr, annot=True, mask=matrix, vmin=-1, vmax=1)
+    sns.heatmap(corr, annot=annot, mask=matrix, vmin=-1, vmax=1)
     plt.show()
 
 def PlotFireSizeDistribution(df: pd.DataFrame) -> None:

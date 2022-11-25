@@ -5,6 +5,7 @@ import seaborn as sns
 from sklearn.linear_model import Lasso, Ridge, LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from sklearn.model_selection import cross_val_score
+from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 def ScoreModel(model, X_test, y_test) -> None:
     """
@@ -121,3 +122,22 @@ def PlotAlphaHeatmap(model, X_train, y_train, alphas, figsize=(30,30)) -> None:
     plt.figure(figsize=figsize)
     sns.heatmap(df)
     plt.show()
+
+def create_vif_df(X: pd.DataFrame) -> pd.DataFrame:
+    """
+    Creates a sorted DataFrame of the VIF scores for a given set of features.
+
+    Parameters
+    ----------
+    X: DataFrame of features.
+
+    Returns
+    -------
+    pd.DataFrame with the VIF values sorted in ascending order.
+    """
+    vif_df = pd.DataFrame(
+        {'VIF': [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]}, 
+        index=X.columns
+    ).sort_values(by='VIF')
+
+    return vif_df
