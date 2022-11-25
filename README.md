@@ -12,7 +12,7 @@
     Edwin Jaico-Berg | e.j.berg@outlook.com 
   </p>
   <p align="center">
-      https://github.com/EdwinJaico-Berg 
+      https://github.com/EdwinJaico-Berg | https://www.linkedin.com/in/edwin-j-berg/
   </p>
 </div>
 
